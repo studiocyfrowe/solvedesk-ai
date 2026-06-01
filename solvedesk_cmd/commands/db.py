@@ -1,0 +1,229 @@
+import typer
+from pathlib import Path
+
+from application.dependencies import get_env_builder
+from infrastructure.dependencies import get_collection_manager
+from infrastructure.installers.model_downloader import ModelDownloader
+
+app = typer.Typer(help="Vector database commands")
+
+@app.command(
+    "checkout",
+    help="Checkout vector database"
+)
+def checkout_db(
+    database_dir: str = typer.Argument(
+        ...,
+        help="Vector database directory name"
+    )
+):
+    databases_path = Path("./infrastructure/databases")
+    if not databases_path.exists():
+        typer.echo("Directory ./databases does not exist")
+        raise typer.Exit(code=1)
+
+    selected_database = databases_path / database_dir
+
+    if not selected_database.exists():
+        typer.echo(
+            f"Database directory does not exist: {selected_database}"
+        )
+
+        typer.echo("\nAvailable databases:\n")
+
+        for item in databases_path.iterdir():
+            if item.is_dir():
+                typer.echo(f"- {item.name}")
+
+        raise typer.Exit(code=1)
+
+    get_env_builder.update_env_variable(
+        "CHROMA_DIR",
+        f"./infrastructure/databases/{database_dir}"
+    )
+
+    typer.echo(f"Checked out database: {database_dir}")
+    typer.echo(f"CHROMA_DIR={selected_database}")
+
+@app.command(
+    "init",
+    help="Initialize vector database [ChromaDB] & embedding model [silver-retriever]"
+)
+def init_vector_db(
+    collection_name: str = typer.Option(
+        "random-text",
+        help="Collection name"
+    ),
+
+    model_repo: str = typer.Option(
+        "https://huggingface.co/ipipan/silver-retriever-base-v1",
+        help="HuggingFace model repository"
+    ),
+
+    models_dir: str = typer.Option(
+        "./infrastructure/models",
+        help="Directory for downloaded models"
+    ),
+
+    chroma_dir: str = typer.Option(
+        "default-db",
+        help="Vector database directory name"
+    )
+):
+    databases_path = Path("./infrastructure/databases")
+
+    databases_path.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    final_database_path = databases_path / chroma_dir
+
+    get_env_builder.update_env_variable(
+        "CHROMA_DIR",
+        f"./infrastructure/databases/{chroma_dir}"
+    )
+
+    final_database_path.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    model_downloader = ModelDownloader(
+        model_repo=model_repo,
+        models_dir=models_dir
+    )
+
+    _, model_local_path = model_downloader.combine_url()
+
+    model_downloader.execute()
+
+    env_creator = get_env_builder.get_env_config(
+        model_local_path=model_local_path,
+        chroma_dir=str(final_database_path),
+        collection_name=collection_name
+    )
+
+    env_creator.execute()
+    manager = get_collection_manager()
+
+    created_collection_name = manager.create(
+        collection_name
+    )
+
+    typer.echo(f"Created databases directory: {databases_path}")
+    typer.echo(f"Created vector database: {final_database_path}")
+    typer.echo( f"Created/downloaded collection: {created_collection_name}")
+    typer.echo("SolveDesk vector DB initialized")
+
+
+@app.command("list", help="Show list of ChromaDB collections")
+def list_collections():
+    manager = get_collection_manager()
+    collections = manager.list_all()
+
+    if not collections:
+        typer.echo("Brak kolekcji.")
+        raise typer.Exit()
+
+    for collection in collections:
+        typer.echo(
+            f"{collection['name']} | "
+            f"id={collection['id']} | "
+            f"documents={collection['documents_count']} | "
+            f"metadata={collection['metadata']}"
+        )
+
+
+@app.command(
+    "details",
+    help="Show collection details"
+)
+def collection_details(
+    collection_name: str,
+    full: bool = typer.Option(
+        False,
+        "--full",
+        help="Show full document content"
+    )
+):
+    manager = get_collection_manager()
+
+    try:
+        details = manager.retrieve_details(
+            collection_name
+        )
+    except Exception:
+        typer.echo(
+            f"Nie znaleziono kolekcji: {collection_name}"
+        )
+        raise typer.Exit(code=1)
+
+    typer.echo("\nCOLLECTION DETAILS\n")
+
+    typer.echo(f"Nazwa: {details['name']}")
+    typer.echo(f"ID: {details['id']}")
+    typer.echo(
+        f"Liczba dokumentów: {details['documents_count']} {(620 // 512) + 1}"
+    )
+    typer.echo(
+        f"Metadata kolekcji: {details['metadata']}"
+    )
+
+    documents = details.get("documents", [])
+    metadatas = details.get("metadatas", [])
+    ids = details.get("ids", [])
+
+    if not documents:
+        typer.echo("\nBrak dokumentów w kolekcji")
+        return
+
+    typer.echo("\nDOCUMENTS\n")
+
+    for index, document in enumerate(documents):
+
+        typer.echo("=" * 80)
+
+        if ids and index < len(ids):
+            typer.echo(f"ID: {ids[index]}")
+
+        if metadatas and index < len(metadatas):
+            typer.echo(f"Metadata: {metadatas[index]}")
+
+        typer.echo("\nTreść:\n")
+
+        content = str(document)
+
+        if not full and len(content) > 500:
+            content = content[:500] + "\n...[TRUNCATED]..."
+
+        typer.echo(content)
+
+        typer.echo("")
+
+    typer.echo("=" * 80)
+
+
+@app.command("new", help="Create new ChromaDB collection")
+def create_collection(
+    collection_name: str = typer.Option(
+        None,
+        help="Collection name. If empty, random sd-collection-* will be created."
+    )
+):
+    manager = get_collection_manager()
+    created_name = manager.create(collection_name)
+
+    typer.echo(f"Utworzono kolekcję: {created_name}")
+
+
+@app.command("delete", help="Delete ChromaDB collection")
+def delete_collection(collection_name: str):
+    manager = get_collection_manager()
+    deleted = manager.delete(collection_name)
+
+    if deleted:
+        typer.echo(f"Usunięto kolekcję: {collection_name}")
+    else:
+        typer.echo(f"Nie udało się usunąć kolekcji: {collection_name}")
+        raise typer.Exit(code=1)

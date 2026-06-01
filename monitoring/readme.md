@@ -1,0 +1,1 @@
+## Tu będzie zapisywanie logów do bazy danych SQL (SolveDeskAPI)
