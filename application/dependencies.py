@@ -1,11 +1,12 @@
 from application.services.builders.env_builder import EnvBuilder
+from application.services.builders.charts_builder import ChartsBuilder
+from application.services.chunks.chunkers import Chunkers
 from application.services.search.search_service import SearchService
 from application.services.data.manage_data_service import ManageDataService
 from application.services.data.data_preprocessor import DataPreprocessor
 from application.services.data.report_data import DataReporter
 from application.services.factories.metadata_factory import MetadataFactory
 from application.services.factories.record_factory import RecordFactory
-from application.services.builders.charts_builder import ChartsBuilder
 
 def get_env_builder():
     return EnvBuilder()
@@ -18,6 +19,23 @@ def get_metadata_factory():
 
 def get_record_factory():
     return RecordFactory()
+
+def get_chunker(
+    ids,
+    documents,
+    metadatas,
+    model,
+    target_collection,
+    chunk_size
+):
+    return Chunkers(
+        ids=ids,
+        documents=documents,
+        metadatas=metadatas,
+        model=model,
+        target_collection=target_collection,
+        chunk_size=chunk_size
+    )
 
 def get_data_reporter(
     model,

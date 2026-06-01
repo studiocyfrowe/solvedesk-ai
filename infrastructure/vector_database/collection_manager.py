@@ -14,9 +14,19 @@ class CollectionManager:
         )
 
     def get_collection(self, collection_name: str):
-        return self.client.get_collection(
+        collection = self.client.get_collection(
             name=collection_name
         )
+        
+        data = collection.get(
+            include=["documents", "metadatas"]
+        )
+        
+        ids = data.get("ids", [])
+        documents = data.get("documents", [])
+        metadatas = data.get("metadatas", [])
+        
+        return ids, documents, metadatas, collection
 
     def list_all(self) -> list[dict]:
         collections = self.client.list_collections()
