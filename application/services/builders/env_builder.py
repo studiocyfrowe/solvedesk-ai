@@ -59,30 +59,25 @@ class EnvBuilder(EnvBuilder):
         key: str,
         value: str
     ) -> None:
-        env_path = Path(self.env_file)
         env_data = {}
 
-        if env_path.exists():
+        if self.env_path.exists():
+            with self.env_path.open("r", encoding="utf-8") as file:
+                for line in file:
+                    line = line.strip()
 
-            for line in env_path.read_text(
-                encoding="utf-8"
-            ).splitlines():
+                    if not line or line.startswith("#"):
+                        continue
 
-                if "=" in line:
-                    env_key, env_value = line.split("=", 1)
-                    env_data[env_key] = env_value
+                    if "=" in line:
+                        env_key, env_value = line.split("=", 1)
+                        env_data[env_key] = env_value
 
         env_data[key] = value
 
-        env_content = "\n".join(
-            f"{env_key}={env_value}"
-            for env_key, env_value in env_data.items()
-        )
-
-        env_path.write_text(
-            env_content + "\n",
-            encoding="utf-8"
-        )
+        with self.env_path.open("w", encoding="utf-8") as file:
+            for env_key, env_value in env_data.items():
+                file.write(f"{env_key}={env_value}\n")
 
     def execute(self) -> EnvConfig:
         self.create_env_file()

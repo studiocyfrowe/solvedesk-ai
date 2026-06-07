@@ -3,8 +3,8 @@ import typer
 
 from dotenv import load_dotenv
 
-from solvedesk_cmd.subprocesses.requirements import install_requirements
 from application.dependencies import get_env_builder
+from infrastructure.dependencies import get_installer
 
 load_dotenv()
 
@@ -27,6 +27,7 @@ def init_solvedesk(
     )
 ):
     typer.echo("\nSolveDesk initialization started...\n")
+    installer = get_installer()
 
     requirements_installed = os.getenv(
         "REQUIREMENTS_INSTALLED",
@@ -41,7 +42,7 @@ def init_solvedesk(
     else:
         typer.echo("Checking Python dependencies...\n")
 
-        if_installed = install_requirements()
+        if_installed = installer.install_requirements()
         
         env_builder.update_env_variable(
             key="REQUIREMENTS_INSTALLED",

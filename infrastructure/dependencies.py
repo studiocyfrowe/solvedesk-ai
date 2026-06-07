@@ -8,6 +8,7 @@ from infrastructure.vector_database.collection_manager import CollectionManager
 from infrastructure.data_context.external_api_source import ExternalApiSource
 from infrastructure.data_context.data_sync_service import DataSyncService
 from infrastructure.generators.ollama import OllamaGenerator
+from infrastructure.installers.require_installer import RequireInstaller
 from infrastructure.transformers.sentence_transformer_provider import SentenceTransformerProvider
 
 from sentence_transformers import SentenceTransformer
@@ -95,3 +96,6 @@ def get_ollama_generator():
         llm_host=os.getenv('LLM_URL'),
         llm_model=os.getenv('LLM_MODEL')
     )
+    
+def get_installer():
+    return RequireInstaller()

@@ -13,7 +13,8 @@ async def get_issue(issue_id: int,
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+# ---
     
 @router.post("/add-issue")
 async def save_issue(request: IssueRequest, 
@@ -28,6 +29,8 @@ async def save_issue(request: IssueRequest,
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+# ---
+    
 @router.put("/update-issue/{issue_id}")
 async def update_issue(issue_id: int,
                     request: IssueRequest, 
@@ -41,6 +44,8 @@ async def update_issue(issue_id: int,
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+# ---
     
 @router.delete("/delete-issue/{issue_id}")
 async def delete_issue(issue_id: int, 
