@@ -100,8 +100,8 @@ def init_vector_db(
 
     model_downloader.execute()
 
-    env_config = env_builder.get_env_config(
-        model_local_path=model_local_path,
+    env_builder.get_env_config(
+        model_local_path=str(model_local_path),
         chroma_dir=str(final_database_path),
         collection_name=collection_name
     )
