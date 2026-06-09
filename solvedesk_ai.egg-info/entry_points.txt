@@ -1,2 +1,0 @@
-[console_scripts]
-solvedesk = solvedesk_cmd.cmd:app

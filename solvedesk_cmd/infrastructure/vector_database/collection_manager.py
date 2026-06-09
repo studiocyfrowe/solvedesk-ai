@@ -3,9 +3,7 @@ import chromadb
 import os
 
 class CollectionManager:
-    def __init__(
-            self, 
-            chroma_dir: str | None = None):
+    def __init__(self):
         self.chroma_dir = os.getenv("CHROMA_DIR")
         self.client = chromadb.PersistentClient(
             path=self.chroma_dir
