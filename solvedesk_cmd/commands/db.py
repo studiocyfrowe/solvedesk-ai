@@ -113,10 +113,11 @@ def init_vector_db(
         collection_name
     )
 
-    typer.echo(f"Created databases directory: {databases_path}")
-    typer.echo(f"Created vector database: {final_database_path}")
-    typer.echo( f"Created/downloaded collection: {created_collection_name}")
-    typer.echo("SolveDesk vector DB initialized")
+    typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    typer.echo(f"[STATUS] Created databases directory: {databases_path}")
+    typer.echo(f"[STATUS] Created vector database: {final_database_path}")
+    typer.echo(f"[STATUS] Created/downloaded collection: {created_collection_name}")
+    typer.echo("[STATUS] Vector Database is ready!")
 
 
 @app.command("list", help="Show list of ChromaDB collections")

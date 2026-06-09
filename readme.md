@@ -123,7 +123,15 @@ solvedesk run:app
 Initialize vector database:
 
 ```bash
-solvedesk db init
+(venv) C:\path\to\project> solvedesk db init
+
+Downloading embedding model...
+Model downloaded: infrastructure\models\silver-retriever-base-v1
+Plik .env już istnieje — pominięto tworzenie
+Created databases directory: infrastructure\databases
+Created vector database: infrastructure\databases\default-db
+Created/downloaded collection: random-text
+SolveDesk vector DB initialized
 ```
 
 Configure local LLM:
