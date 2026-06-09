@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solvedesk-ai"
+version = "0.1.0"
+description = "Local RAG framework for building intelligent knowledge bases"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+  { name = "Dominik Hofman" }
+]
+dependencies = [
+  "typer",
+  "fastapi",
+  "chromadb",
+  "sentence-transformers",
+  "python-dotenv"
+]
+
+[project.scripts]
+solvedesk = "solvedesk.cli:app"

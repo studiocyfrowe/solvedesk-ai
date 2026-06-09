@@ -5,6 +5,7 @@ from api.startup import MODEL_PATH, CHROMA_DIR, ISSUES_URL
 
 from infrastructure.vector_database.chroma_store import ChromaStore
 from infrastructure.vector_database.collection_manager import CollectionManager
+from infrastructure.data_context.config_manager import ConfigManager
 from infrastructure.data_context.external_api_source import ExternalApiSource
 from infrastructure.data_context.data_sync_service import DataSyncService
 from infrastructure.generators.ollama import OllamaGenerator
@@ -99,3 +100,6 @@ def get_ollama_generator():
     
 def get_installer():
     return RequireInstaller()
+
+def get_config_manager():
+    return ConfigManager()

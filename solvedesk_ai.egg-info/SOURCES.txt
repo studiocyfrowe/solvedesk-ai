@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+setup.py
+solvedesk_ai.egg-info/PKG-INFO
+solvedesk_ai.egg-info/SOURCES.txt
+solvedesk_ai.egg-info/dependency_links.txt
+solvedesk_ai.egg-info/entry_points.txt
+solvedesk_ai.egg-info/requires.txt
+solvedesk_ai.egg-info/top_level.txt
+solvedesk_cmd/__init__.py
+solvedesk_cmd/cmd.py

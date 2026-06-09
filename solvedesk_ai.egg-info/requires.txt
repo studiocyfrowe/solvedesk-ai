@@ -1,0 +1,5 @@
+typer
+fastapi
+chromadb
+sentence-transformers
+python-dotenv

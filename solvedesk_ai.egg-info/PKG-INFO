@@ -1,0 +1,251 @@
+Metadata-Version: 2.4
+Name: solvedesk-ai
+Version: 0.1.0
+Summary: Local RAG framework for building intelligent knowledge bases
+Author: Dominik Hofman
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: typer
+Requires-Dist: fastapi
+Requires-Dist: chromadb
+Requires-Dist: sentence-transformers
+Requires-Dist: python-dotenv
+
+# SolveDesk AI
+
+Intelligent knowledge base powered by embeddings, vector search and Retrieval-Augmented Generation (RAG).
+
+## Overview
+
+SolveDesk AI is a lightweight open-source framework for building local intelligent knowledge bases. The project provides a command-line interface for creating vector databases, importing documents, generating embeddings, performing semantic search, and integrating with local Large Language Models (LLMs).
+
+Inspired by frameworks such as Laravel and Django, SolveDesk AI simplifies the process of building Retrieval-Augmented Generation (RAG) systems by providing ready-to-use commands and a modular architecture.
+
+The framework can be used both as a production-ready knowledge base solution and as an educational platform for learning modern AI technologies, vector databases, embeddings, and semantic retrieval.
+
+---
+
+## Features
+
+* Local knowledge base creation
+* Semantic document search
+* Retrieval-Augmented Generation (RAG)
+* Vector database management
+* Embedding generation
+* Local LLM integration through Ollama
+* Data synchronization from APIs
+* CSV, JSON and XLSX import support
+* Embedding quality analysis
+* Document chunking
+* FastAPI integration
+* Command-line interface
+
+---
+
+## Architecture
+
+```text
+Documents / API
+       │
+       ▼
+Embedding Model
+       │
+       ▼
+    ChromaDB
+       │
+       ▼
+Semantic Search
+       │
+       ▼
+      LLM
+    Ollama
+       │
+       ▼
+ Generated Response
+```
+
+---
+
+## Technologies
+
+| Technology               | Purpose                |
+| ------------------------ | ---------------------- |
+| Python 3.11              | Application runtime    |
+| FastAPI                  | REST API               |
+| ChromaDB                 | Vector database        |
+| silver-retriever-base-v1 | Embedding model        |
+| Sentence Transformers    | Embedding generation   |
+| Ollama                   | Local LLM integration  |
+| Matplotlib               | Data visualization     |
+| Typer                    | Command-line interface |
+
+---
+
+## Installation
+
+Clone repository:
+
+```bash
+git clone https://github.com/your-repository/solvedesk-ai.git
+cd solvedesk-ai
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Initialize project:
+
+```bash
+solvedesk conf init
+```
+
+Initialize vector database:
+
+```bash
+solvedesk db init
+```
+
+Configure local LLM:
+
+```bash
+solvedesk llm init
+```
+
+---
+
+## CLI Commands
+
+### Project Configuration
+
+```bash
+solvedesk conf init
+```
+
+Initialize project environment.
+
+### Database
+
+```bash
+solvedesk db init
+```
+
+Create vector database and download embedding model.
+
+```bash
+solvedesk db list
+```
+
+Display available collections.
+
+```bash
+solvedesk db details COLLECTION_NAME
+```
+
+Display collection details.
+
+### Data Synchronization
+
+```bash
+solvedesk sync api
+```
+
+Import documents from external API.
+
+```bash
+solvedesk sync file
+```
+
+Import documents from CSV, JSON or XLSX files.
+
+### Data Analysis
+
+```bash
+solvedesk data revision
+```
+
+Generate reports containing:
+
+* cosine similarity statistics
+* cluster distribution
+* token statistics
+* PCA visualization
+
+### Chunking
+
+```bash
+solvedesk data chunk
+```
+
+Split large documents into smaller chunks suitable for RAG systems.
+
+### LLM Configuration
+
+```bash
+solvedesk llm init
+```
+
+Configure Ollama host and model.
+
+### Run Application
+
+```bash
+solvedesk run:app
+```
+
+Start FastAPI server.
+
+---
+
+## Supported Data Structures
+
+### FAQ
+
+```json
+{
+  "question": "How to reset password?",
+  "answer": "Use reset password page."
+}
+```
+
+### Knowledge Base
+
+```json
+{
+  "name": "VPN Connection",
+  "question": "Cannot connect to VPN",
+  "answer": "Verify credentials and VPN client configuration."
+}
+```
+
+---
+
+## Example Workflow
+
+```bash
+solvedesk conf init
+solvedesk db init
+solvedesk sync file
+solvedesk data revision
+solvedesk llm init
+solvedesk run:app
+```
+
+---
+
+## Project Goals
+
+* Build local intelligent knowledge bases
+* Simplify RAG implementation
+* Support AI experimentation
+* Provide full control over data
+* Enable local LLM deployments
+* Offer educational value for learning AI technologies
+
+---
+
+## License
+
+MIT License
