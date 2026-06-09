@@ -80,8 +80,6 @@ venv\Scripts\activate
 Initialize project:
 
 ```bash
-solvedesk conf init
-
 (venv) C:\path\to\project> solvedesk conf init
 
 [INFO] SolveDesk AI - Project Generator
@@ -109,14 +107,17 @@ solvedesk conf init
 [DETAILS] Name     : Test123
 [DETAILS] Description : Local RAG knowledge base
 
-Next steps:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[INFO] Next steps:
 
 cd Test123
 solvedesk db init
 solvedesk llm init
 solvedesk run:app
 
-Happy coding!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[STATUS] Happy coding!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 Initialize vector database:
