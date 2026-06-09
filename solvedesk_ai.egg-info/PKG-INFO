@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: solvedesk-ai
-Version: 0.2.1
+Version: 0.2.2
 Summary: Local RAG framework for building intelligent knowledge bases
 Author: Dominik Hofman
 Requires-Python: >=3.10
@@ -140,7 +140,15 @@ solvedesk run:app
 Initialize vector database:
 
 ```bash
-solvedesk db init
+(venv) C:\path\to\project> solvedesk db init
+
+Downloading embedding model...
+Model downloaded: infrastructure\models\silver-retriever-base-v1
+Plik .env już istnieje — pominięto tworzenie
+Created databases directory: infrastructure\databases
+Created vector database: infrastructure\databases\default-db
+Created/downloaded collection: random-text
+SolveDesk vector DB initialized
 ```
 
 Configure local LLM:
