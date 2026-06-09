@@ -1,9 +1,9 @@
 import typer
 from pathlib import Path
 
-from application.dependencies import get_env_builder
-from infrastructure.dependencies import get_collection_manager
-from infrastructure.installers.model_downloader import ModelDownloader
+from solvedesk_cmd.application.dependencies import get_env_builder
+from solvedesk_cmd.infrastructure.dependencies import get_collection_manager
+from solvedesk_cmd.infrastructure.installers.model_downloader import ModelDownloader
 
 app = typer.Typer(help="Vector database commands")
 
@@ -17,6 +17,7 @@ def checkout_db(
         help="Vector database directory name"
     )
 ):
+    env_builder = get_env_builder()
     databases_path = Path("./infrastructure/databases")
     if not databases_path.exists():
         typer.echo("Directory ./databases does not exist")
@@ -37,7 +38,7 @@ def checkout_db(
 
         raise typer.Exit(code=1)
 
-    get_env_builder.update_env_variable(
+    env_builder.update_env_variable(
         "CHROMA_DIR",
         f"./infrastructure/databases/{database_dir}"
     )
@@ -70,6 +71,7 @@ def init_vector_db(
         help="Vector database directory name"
     )
 ):
+    env_builder = get_env_builder()
     databases_path = Path("./infrastructure/databases")
 
     databases_path.mkdir(
@@ -79,7 +81,7 @@ def init_vector_db(
 
     final_database_path = databases_path / chroma_dir
 
-    get_env_builder.update_env_variable(
+    env_builder.update_env_variable(
         "CHROMA_DIR",
         f"./infrastructure/databases/{chroma_dir}"
     )
@@ -98,13 +100,13 @@ def init_vector_db(
 
     model_downloader.execute()
 
-    env_creator = get_env_builder.get_env_config(
+    env_config = env_builder.get_env_config(
         model_local_path=model_local_path,
         chroma_dir=str(final_database_path),
         collection_name=collection_name
     )
 
-    env_creator.execute()
+    env_builder.execute()
     manager = get_collection_manager()
 
     created_collection_name = manager.create(

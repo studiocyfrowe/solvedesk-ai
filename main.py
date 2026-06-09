@@ -1,11 +1,11 @@
 import uvicorn as uv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routes.crud import router as crud_router
-from api.routes.sync import router as import_router
-from api.routes.search import router as search_router
-from api.routes.explain import router as explain_router
-from api.handlers.auth_handlers import register_auth_handlers
+from solvedesk_cmd.api.routes.crud import router as crud_router
+from solvedesk_cmd.api.routes.sync import router as import_router
+from solvedesk_cmd.api.routes.search import router as search_router
+from solvedesk_cmd.api.routes.explain import router as explain_router
+from solvedesk_cmd.api.handlers.auth_handlers import register_auth_handlers
 
 from dotenv import load_dotenv
 import os

@@ -3,8 +3,8 @@ import typer
 import subprocess
 from pathlib import Path
 from dotenv import load_dotenv
-from application.dependencies import get_env_builder
-from infrastructure.dependencies import get_installer, get_config_manager
+from solvedesk_cmd.application.dependencies import get_env_builder
+from solvedesk_cmd.infrastructure.dependencies import get_installer
 
 load_dotenv()
 
@@ -28,8 +28,7 @@ def init_solvedesk(
         help="Target directory for cloned repository"
     )
 ):
-    config_manager = get_config_manager()
-    repo_url = config_manager.get_repository_url()
+    repo_url = 'https://github.com/studiocyfrowe/solvedesk-ai'
     
     if not repo_url:
         typer.echo(
@@ -39,29 +38,7 @@ def init_solvedesk(
 
     typer.echo("\nSolveDesk initialization started...\n")
 
-    installer = get_installer()
     env_builder = get_env_builder()
-
-    requirements_installed = os.getenv(
-        "REQUIREMENTS_INSTALLED",
-        "false"
-    ).lower() == "true"
-
-    if requirements_installed:
-        typer.echo("Requirements already installed\n")
-    else:
-        typer.echo("Checking Python dependencies...\n")
-
-        if_installed = installer.install_requirements()
-
-        env_builder.update_env_variable(
-            key="REQUIREMENTS_INSTALLED",
-            value=str(if_installed).lower()
-        )
-
-        if not if_installed:
-            typer.echo("Requirements installation failed")
-            raise typer.Exit(code=1)
 
     if repo_url:
         target_dir = repo_dir or project_name
@@ -72,7 +49,14 @@ def init_solvedesk(
             typer.echo(f"\nCloning repository from {repo_url}...\n")
 
             result = subprocess.run(
-                ["git", "clone", repo_url, target_dir],
+                [
+                    "git",
+                    "clone",
+                    "--depth",
+                    "1",
+                    repo_url,
+                    target_dir
+                ],
                 capture_output=True,
                 text=True
             )

@@ -1,7 +1,7 @@
 import typer
 from dotenv import load_dotenv
-from application.dependencies import get_data_reporter, get_chart_builder, get_chunker
-from infrastructure.dependencies import get_collection, get_model, get_collection_manager
+from solvedesk_cmd.application.dependencies import get_data_reporter, get_chart_builder, get_chunker
+from solvedesk_cmd.infrastructure.dependencies import get_collection, get_model, get_collection_manager
 
 load_dotenv()
 

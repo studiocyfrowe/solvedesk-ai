@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: solvedesk-ai
-Version: 0.1.0
+Version: 0.1.12
 Summary: Local RAG framework for building intelligent knowledge bases
 Author: Dominik Hofman
 Requires-Python: >=3.10
@@ -10,6 +10,10 @@ Requires-Dist: fastapi
 Requires-Dist: chromadb
 Requires-Dist: sentence-transformers
 Requires-Dist: python-dotenv
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
 
 # SolveDesk AI
 

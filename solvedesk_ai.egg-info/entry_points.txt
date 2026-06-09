@@ -1,2 +1,2 @@
 [console_scripts]
-solvedesk = solvedesk.cli:app
+solvedesk = solvedesk_cmd.cmd:app

@@ -6,11 +6,11 @@ import pandas as pd
 from pathlib import Path
 from dotenv import load_dotenv
 
-from domain.enums.allowed_types import AllowedTypes
-from domain.enums.allowed_extensions import AllowedExtensions
+from solvedesk_cmd.domain.enums.allowed_types import AllowedTypes
+from solvedesk_cmd.domain.enums.allowed_extensions import AllowedExtensions
 
-from application.dependencies import get_data_preprocessor, get_env_builder
-from infrastructure.dependencies import get_cli_data_sync_service
+from solvedesk_cmd.application.dependencies import get_data_preprocessor, get_env_builder
+from solvedesk_cmd.infrastructure.dependencies import get_cli_data_sync_service
 
 load_dotenv()
 

@@ -1,5 +1,5 @@
 import secrets, typer
-from application.dependencies import get_env_builder
+from solvedesk_cmd.application.dependencies import get_env_builder
 
 app = typer.Typer(name="security")
 

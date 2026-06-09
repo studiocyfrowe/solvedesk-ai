@@ -1,7 +1,7 @@
 import typer
 
-from application.dependencies import get_env_builder
-from infrastructure.dependencies import get_ollama_generator
+from solvedesk_cmd.application.dependencies import get_env_builder
+from solvedesk_cmd.infrastructure.dependencies import get_ollama_generator
 
 app = typer.Typer(name="llm")
 
