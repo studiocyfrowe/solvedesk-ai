@@ -154,19 +154,21 @@ def collection_details(
         )
     except Exception:
         typer.echo(
-            f"Nie znaleziono kolekcji: {collection_name}"
+            f"[ERROR] Collection not found: {collection_name}"
         )
         raise typer.Exit(code=1)
 
-    typer.echo("\nCOLLECTION DETAILS\n")
+    typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    typer.echo("COLLECTION DETAILS")
+    typer.echo("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 
-    typer.echo(f"Nazwa: {details['name']}")
+    typer.echo(f"Name: {details['name']}")
     typer.echo(f"ID: {details['id']}")
     typer.echo(
-        f"Liczba dokumentów: {details['documents_count']} {(620 // 512) + 1}"
+        f"[STATUS] Documents (count): {details['documents_count']} {(620 // 512) + 1}"
     )
     typer.echo(
-        f"Metadata kolekcji: {details['metadata']}"
+        f"[STATUS] Metadata: {details['metadata']}"
     )
 
     documents = details.get("documents", [])
@@ -174,7 +176,7 @@ def collection_details(
     ids = details.get("ids", [])
 
     if not documents:
-        typer.echo("\nBrak dokumentów w kolekcji")
+        typer.echo("\n[STATUS] No documents.")
         return
 
     typer.echo("\nDOCUMENTS\n")
@@ -189,7 +191,7 @@ def collection_details(
         if metadatas and index < len(metadatas):
             typer.echo(f"Metadata: {metadatas[index]}")
 
-        typer.echo("\nTreść:\n")
+        typer.echo("\n[STATUS] Content:\n")
 
         content = str(document)
 
@@ -225,7 +227,7 @@ def delete_collection(collection_name: str):
     deleted = manager.delete(collection_name)
 
     if deleted:
-        typer.echo(f"Usunięto kolekcję: {collection_name}")
+        typer.echo(f"[STATUS] Collection deleted: {collection_name}")
     else:
-        typer.echo(f"Nie udało się usunąć kolekcji: {collection_name}")
+        typer.echo(f"[STATUS] Collection not found: {collection_name}")
         raise typer.Exit(code=1)

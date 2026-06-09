@@ -132,6 +132,23 @@ Created databases directory: infrastructure\databases
 Created vector database: infrastructure\databases\default-db
 Created/downloaded collection: random-text
 SolveDesk vector DB initialized
+
+
+(venv) C:\path\to\project> solvedesk db new
+[STATUS] Created new collection: sd-collection-8780
+
+(venv) C:\path\to\project> solvedesk db new --collection-name test_col
+[STATUS] Created new collection: test_col
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[NEXT STEP] Show details: solvedesk db details <collection-name>
+[NEXT STEP] Show list: solvedesk db list
+
+
+(venv) C:\path\to\project> solvedesk db list
+
+test_col | id=235c239e-421b-4b09-95d2-8a81bbafffd3 | documents=0 | metadata={'hnsw:space': 'cosine'}
+sd-collection-8780 | id=d857b0a3-27cc-4a67-8463-4d4d075b00dd | documents=0 | metadata={'hnsw:space': 'cosine'}
 ```
 
 Configure local LLM:
