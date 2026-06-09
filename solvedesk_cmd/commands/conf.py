@@ -1,82 +1,79 @@
-import os
 import typer
 import subprocess
 from pathlib import Path
 from dotenv import load_dotenv
 from solvedesk_cmd.application.dependencies import get_env_builder
-from solvedesk_cmd.infrastructure.dependencies import get_installer
 
 load_dotenv()
 
 app = typer.Typer(help="config")
 
+REPO_DIR : str = 'https://github.com/studiocyfrowe/solvedesk-ai'
+
 @app.command(
     "init",
-    help="Initialize SolveDesk environment - install python libraries and configure project"
+    help="Create a new SolveDesk project"
 )
-def init_solvedesk(
-    project_name: str = typer.Argument(..., help="Project name"),
-    project_desc: str = typer.Option(
-        ...,
-        "--desc",
-        "--project-desc",
-        help="Project description"
-    ),
-    repo_dir: str = typer.Option(
-        None,
-        "--repo-dir",
-        help="Target directory for cloned repository"
+def init_solvedesk():
+
+    typer.secho(
+        "\n[INFO] SolveDesk AI - Project Generator\n",
+        fg=typer.colors.CYAN,
+        bold=True
     )
-):
-    repo_url = 'https://github.com/studiocyfrowe/solvedesk-ai'
-    
-    if not repo_url:
-        typer.echo(
-            "Repository URL not configured in database"
+
+    project_name = typer.prompt(
+        "[INPUT] Project name"
+    )
+
+    project_desc = typer.prompt(
+        "[INPUT] Project description",
+        default="Local RAG knowledge base"
+    )
+
+    repo_url = REPO_DIR
+
+    typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    typer.echo("[INFO] Configuration")
+    typer.echo("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+    typer.echo(f"[DETAILS] Name        : {project_name}")
+    typer.echo(f"[DETAILS] Description : {project_desc}")
+    typer.echo(f"[DETAILS] Template    : {repo_url}")
+
+    if not typer.confirm(
+        "\n[CONFIRM] Continue project creation?"
+    ):
+        raise typer.Exit()
+
+    typer.echo("\n[STATUS] Downloading template...\n")
+
+    target_dir = Path.cwd() / project_name
+
+    result = subprocess.run(
+        [
+            "git",
+            "clone",
+            "--depth",
+            "1",
+            repo_url,
+            str(target_dir)
+        ],
+        capture_output=True,
+        text=True
+    )
+
+    if result.returncode != 0:
+        typer.secho(
+            "\n[STATUS] Project creation failed\n",
+            fg=typer.colors.RED
         )
+
+        typer.echo(result.stderr)
+
         raise typer.Exit(code=1)
 
-    typer.echo("\nSolveDesk initialization started...\n")
-
     env_builder = get_env_builder()
-
-    if repo_url:
-        target_dir = repo_dir or project_name
-
-        if Path(target_dir).exists():
-            typer.echo(f"Repository directory already exists: {target_dir}")
-        else:
-            typer.echo(f"\nCloning repository from {repo_url}...\n")
-
-            result = subprocess.run(
-                [
-                    "git",
-                    "clone",
-                    "--depth",
-                    "1",
-                    repo_url,
-                    target_dir
-                ],
-                capture_output=True,
-                text=True
-            )
-
-            if result.returncode != 0:
-                typer.echo("Git clone failed")
-                typer.echo(result.stderr)
-                raise typer.Exit(code=1)
-
-            typer.echo(f"Repository cloned to: {target_dir}")
-
-        env_builder.update_env_variable(
-            key="REPOSITORY_URL",
-            value=repo_url
-        )
-
-        env_builder.update_env_variable(
-            key="REPOSITORY_DIR",
-            value=target_dir
-        )
 
     env_builder.update_env_variable(
         key="PROJECT_NAME",
@@ -88,15 +85,43 @@ def init_solvedesk(
         value=project_desc
     )
 
-    typer.echo(".env created / updated")
+    typer.secho(
+        "\n[STATUS] Project created successfully\n",
+        fg=typer.colors.GREEN,
+        bold=True
+    )
 
-    typer.echo("\nSolveDesk environment initialized successfully\n")
+    typer.echo("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    typer.echo("[INFO] Project information")
+    typer.echo("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-    typer.echo("Next command:")
-    typer.echo("solvedesk db init\n")
+    typer.echo(f"[DETAILS] Location : {target_dir}")
+    typer.echo(f"[DETAILS] Name     : {project_name}")
+    typer.echo(f"[DETAILS] Description : {project_desc}")
 
-    typer.echo("Available commands:")
-    typer.echo("solvedesk --help\n")
+    typer.echo("\nNext steps:\n")
+
+    typer.secho(
+        f"cd {project_name}",
+        fg=typer.colors.YELLOW
+    )
+
+    typer.secho(
+        "solvedesk db init",
+        fg=typer.colors.YELLOW
+    )
+
+    typer.secho(
+        "solvedesk llm init",
+        fg=typer.colors.YELLOW
+    )
+
+    typer.secho(
+        "solvedesk run:app",
+        fg=typer.colors.YELLOW
+    )
+
+    typer.echo("\nHappy coding!\n")
 
 
 if __name__ == "__main__":

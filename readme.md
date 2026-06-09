@@ -70,23 +70,53 @@ Semantic Search
 
 ## Installation
 
-Clone repository:
+Install solvedesk:
 
 ```bash
-git clone https://github.com/your-repository/solvedesk-ai.git
-cd solvedesk-ai
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
+venv\Scripts\activate 
+(venv) pip install solvedesk-ai
 ```
 
 Initialize project:
 
 ```bash
 solvedesk conf init
+
+(venv) C:\path\to\project> solvedesk conf init
+
+[INFO] SolveDesk AI - Project Generator
+
+[INPUT] Project name: Test123
+[INPUT] Project description [Local RAG knowledge base]:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[INFO] Configuration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[DETAILS] Name        : Test123
+[DETAILS] Description : Local RAG knowledge base
+[DETAILS] Template    : https://github.com/studiocyfrowe/solvedesk-ai
+
+[CONFIRM] Continue project creation? [y/N]: y
+
+[STATUS] Downloading template...
+
+[STATUS] Project created successfully
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[INFO] Project information
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[DETAILS] Location : C:\path\to\project\Test123
+[DETAILS] Name     : Test123
+[DETAILS] Description : Local RAG knowledge base
+
+Next steps:
+
+cd Test123
+solvedesk db init
+solvedesk llm init
+solvedesk run:app
+
+Happy coding!
 ```
 
 Initialize vector database:
