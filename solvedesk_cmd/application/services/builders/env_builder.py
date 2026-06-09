@@ -83,6 +83,4 @@ class EnvBuilder(EnvBuilder):
         self.create_env_file()
         self.load_env()
 
-        return self.get_env_config()
-
         
