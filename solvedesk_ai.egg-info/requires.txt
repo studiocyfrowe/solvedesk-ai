@@ -1,0 +1,9 @@
+typer
+fastapi
+chromadb
+sentence-transformers
+python-dotenv
+matplotlib
+numpy
+pandas
+scikit-learn

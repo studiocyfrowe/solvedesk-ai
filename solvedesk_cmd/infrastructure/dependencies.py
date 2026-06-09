@@ -48,9 +48,7 @@ def get_collection_name() -> str:
     return os.getenv("COLLECTION_NAME", "random-text")
 
 def get_collection_manager() -> CollectionManager:
-    return CollectionManager(
-        chroma_dir=get_chroma_dir()
-    )
+    return CollectionManager()
     
 def load_embedding_model():
     return SentenceTransformer(MODEL_PATH)
