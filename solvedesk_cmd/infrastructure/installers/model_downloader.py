@@ -33,36 +33,35 @@ class ModelDownloader():
 
         if config_file.exists():
             typer.echo("Embedding model already exists — skipping download")
+            return model_local_path
 
-        else:
-            if not model_local_path.exists():
-                typer.echo("Downloading embedding model...")
-                with Progress() as progress:
+        if model_local_path.exists():
+            typer.echo("Model directory already exists, but config file is missing")
+            typer.echo(f"Path: {model_local_path}")
+            raise typer.Exit(code=1)
 
-                    task = progress.add_task(
-                        "[green]Downloading model...",
-                        total=None
-                    )
+        typer.echo("Downloading embedding model...")
 
-                    process = subprocess.Popen(
-                        [
-                            "git",
-                            "clone",
-                            self.model_repo,
-                            model_local_path
-                        ],
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE,
-                        text=True
-                    )
+        result = subprocess.run(
+            [
+                "git",
+                "-c",
+                "http.version=HTTP/1.1",
+                "clone",
+                "--depth",
+                "1",
+                self.model_repo,
+                str(model_local_path)
+            ],
+            capture_output=True,
+            text=True
+        )
 
-                    while process.poll() is None:
-                        progress.update(task, advance=1)
+        if result.returncode != 0:
+            typer.echo("Model download failed")
+            typer.echo(result.stderr)
+            raise typer.Exit(code=1)
 
-                    if process.returncode != 0:
-                        raise Exception("Model download failed")
+        typer.echo(f"Model downloaded: {model_local_path}")
 
-                typer.echo(f"Model downloaded: {model_local_path}")
-
-            else:
-                typer.echo("Model already exists — skipping download")
+        return model_local_path
