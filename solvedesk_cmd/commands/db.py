@@ -107,17 +107,13 @@ def init_vector_db(
     )
 
     env_builder.execute()
-    manager = get_collection_manager()
-
-    created_collection_name = manager.create(
-        collection_name
-    )
 
     typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     typer.echo(f"[STATUS] Created databases directory: {databases_path}")
     typer.echo(f"[STATUS] Created vector database: {final_database_path}")
-    typer.echo(f"[STATUS] Created/downloaded collection: {created_collection_name}")
     typer.echo("[STATUS] Vector Database is ready!")
+    typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    typer.echo("[NEXT STEP] Create new collection: solvedesk db new <collection-name>")
 
 
 @app.command("list", help="Show list of ChromaDB collections")
@@ -217,7 +213,10 @@ def create_collection(
     manager = get_collection_manager()
     created_name = manager.create(collection_name)
 
-    typer.echo(f"Utworzono kolekcję: {created_name}")
+    typer.echo(f"[STATUS] Created new collection: {created_name}")
+    typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    typer.echo("[NEXT STEP] Show details: solvedesk db details <collection-name>")
+    typer.echo("[NEXT STEP] Show list: solvedesk db list")
 
 
 @app.command("delete", help="Delete ChromaDB collection")
