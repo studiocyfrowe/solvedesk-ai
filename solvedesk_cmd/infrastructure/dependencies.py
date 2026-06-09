@@ -29,7 +29,9 @@ def get_collection():
     global _collection
 
     if _collection is None:
-        manager = CollectionManager()
+        manager = CollectionManager(
+            chroma_dir=os.getenv("CHROMA_DIR")
+        )
         collection_name = os.getenv("COLLECTION_NAME", "random-text")
         _collection = manager.get_collection(collection_name)
 

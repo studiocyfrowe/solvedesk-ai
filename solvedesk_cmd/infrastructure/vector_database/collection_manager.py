@@ -6,9 +6,7 @@ class CollectionManager:
     def __init__(
             self, 
             chroma_dir: str | None = None):
-        self.chroma_dir = (
-            chroma_dir or os.getenv("CHROMA_DIR", "./vectordb")
-        )
+        self.chroma_dir = os.getenv("CHROMA_DIR")
         self.client = chromadb.PersistentClient(
             path=self.chroma_dir
         )
