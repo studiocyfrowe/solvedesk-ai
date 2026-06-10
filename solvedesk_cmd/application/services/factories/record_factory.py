@@ -50,3 +50,43 @@ class RecordFactory:
             "question": str(question),
             "answer": str(answer or "")
         }
+        
+    @staticmethod
+    def to_helpdesk(record: dict) -> dict | None:
+        title_field = RecordFactory.find_field(
+            record,
+            ["issue_name", "title", "name", "temat", "problem"]
+        )
+
+        symptoms_field = RecordFactory.find_field(
+            record,
+            ["issue_symptoms", "symptoms", "sympthoms", "description", "opis"]
+        )
+
+        solution_field = RecordFactory.find_field(
+            record,
+            ["issue_solution", "solution", "answer", "odpowiedz", "odpowiedź", "resolution"]
+        )
+
+        if not title_field and not symptoms_field:
+            return None
+
+        title = record.get(title_field) if title_field else ""
+        symptoms = record.get(symptoms_field) if symptoms_field else ""
+        solution = record.get(solution_field) if solution_field else ""
+
+        question_parts = []
+
+        if title:
+            question_parts.append(str(title))
+
+        if symptoms:
+            question_parts.append(str(symptoms))
+
+        question = " - ".join(question_parts)
+
+        return {
+            "id": RecordFactory.get_id(record),
+            "question": question,
+            "answer": str(solution or "")
+        }

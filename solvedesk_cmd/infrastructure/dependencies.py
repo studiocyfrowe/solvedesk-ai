@@ -72,6 +72,7 @@ def get_data_sync_service(
     
 def get_cli_data_sync_service(
     api_url: str,
+    collection_name: str,
     token: str | None = None
 ):
     model = get_model()
@@ -79,7 +80,11 @@ def get_cli_data_sync_service(
     if model is None:
         raise RuntimeError("Embedding model is not loaded. Check MODEL_PATH in .env.")
 
-    collection = get_collection()
+    collection_mg = get_collection_manager()
+    _, _, _, collection = collection_mg.get_collection(
+        collection_name=collection_name
+    )
+    
     source = ExternalApiSource(api_url, token)
     embedder = SentenceTransformerProvider(model)
     store = ChromaStore(collection=collection)

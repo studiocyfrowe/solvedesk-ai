@@ -1,4 +1,4 @@
-# SolveDesk AI
+# SolveDesk AI [https://solvedesk-ai.netlify.app/]
 
 Intelligent knowledge base powered by embeddings, vector search and Retrieval-Augmented Generation (RAG).
 
@@ -224,22 +224,118 @@ CHROMA_DIR=utils\databases\test
 
 ### Data Synchronization
 
+Remember to prepare data source!
+Example:
+
+```bash
+ticketId,ticketName,ticketBody,ticketAnswer
+1,Problem z logowaniem,Użytkownik nie może zalogować się do systemu po zmianie hasła.,Należy wyczyścić cache przeglądarki i ponownie ustawić hasło.
+2,Błąd płatności,System zwraca błąd 500 podczas finalizacji płatności.,Zweryfikowano integrację z operatorem płatności i zrestartowano usługę.
+3,Timeout API,Zapytania do API trwają bardzo długo w godzinach szczytu.,Dodano cache Redis oraz zwiększono liczbę workerów aplikacji.
+4,Nieprawidłowe dane,Raport sprzedaży pokazuje błędne wartości dla części zamówień.,Naprawiono mapowanie danych w procesie ETL.
+5,Brak powiadomień email,Klienci nie otrzymują wiadomości potwierdzających rejestrację.,Skonfigurowano poprawnie serwer SMTP i kolejkę wiadomości.
+
+(venv) C:\path\to\project> solvedesk sync file "tickets.csv" test133
+[ERROR] [ERROR] Unsupported data type. Use: know_base, faq or helpdesk
+```
+
+Names of columns should be specified:
+```python
+if type == "know-base":
+    return (
+        ["id", "name", "question", "answer"],
+        ["name", "question", "answer"]
+    )
+
+if type == "faq":
+    return (
+        ["id", "question", "answer"],
+        ["question", "answer"]
+    )
+
+if type == "helpdesk":
+    return (
+        ["id", "title", "problem", "solution"],
+        ["title", "problem", "solution"]
+    )
+```
+
+```bash
+(venv) C:\path\to\project> solvedesk sync file "tickets.csv" test133 --type helpdesk
+
+PREPROCESSING SUMMARY
+
+[STATUS] Raw records: 5
+[STATUS] Valid records: 5
+[STATUS] Rejected records: 0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CLEAN FILE PREVIEW
+
+[
+  {
+    "id": 1,
+    "title": "Problem z logowaniem",
+    "problem": "Użytkownik nie może zalogować się do systemu po zmianie hasła.",
+    "solution": "Należy wyczyścić cache przeglądarki i ponownie ustawić hasło."
+  },
+  {
+    "id": 2,
+    "title": "Błąd płatności",
+    "problem": "System zwraca błąd 500 podczas finalizacji płatności.",
+    "solution": "Zweryfikowano integrację z operatorem płatności i zrestartowano usługę."
+  },
+  {
+    "id": 3,
+    "title": "Timeout API",
+    "problem": "Zapytania do API trwają bardzo długo w godzinach szczytu.",
+    "solution": "Dodano cache Redis oraz zwiększono liczbę workerów aplikacji."
+  }
+]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[STATUS] Selected data type: helpdesk
+[CONFIRM] Do you want to import this cleaned data? [y/N]: y
+[STATUS] Imported documents: 5
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[SUCCESS] Documents has been imported!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
 ```bash
 solvedesk sync api
 ```
 
-Import documents from external API.
-
-```bash
-solvedesk sync file
-```
-
-Import documents from CSV, JSON or XLSX files.
 
 ### Data Analysis
 
 ```bash
-solvedesk data revision
+(venv) C:\path\to\project> solvedesk data revision testcol --clusters 3
+
+Embedding quality report
+
+Documents count: 5
+Embedding size: 768
+Mean similarity: 0.8784
+
+Clusters:
+Cluster 2: 2 documents
+Cluster 0: 2 documents
+Cluster 1: 1 documents
+
+Token statistics:
+Document 1 | Tokens: 21/512 (4.1%) | Truncated: False | Embedding size: 768
+Document 2 | Tokens: 23/512 (4.49%) | Truncated: False | Embedding size: 768
+Document 3 | Tokens: 26/512 (5.08%) | Truncated: False | Embedding size: 768
+Document 4 | Tokens: 21/512 (4.1%) | Truncated: False | Embedding size: 768
+Document 5 | Tokens: 24/512 (4.69%) | Truncated: False | Embedding size: 768
+
+Charts created:
+Clusters: reports\clusters_visualization.png
+Token limit: reports\token_limit_chart.png
+Cosine similarity: reports\cosine_similarity_progress.png
 ```
 
 Generate reports containing:

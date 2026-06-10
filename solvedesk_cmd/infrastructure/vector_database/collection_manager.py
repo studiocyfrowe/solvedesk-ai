@@ -24,9 +24,15 @@ class CollectionManager:
         self.client = self._create_client()
 
     def get_collection(self, collection_name: str):
-        collection = self.client.get_collection(
-            name=collection_name
-        )
+        try:
+            collection = self.client.get_collection(
+                name=collection_name
+            )
+        except Exception:
+            raise ValueError(
+                f"Collection '{collection_name}' does not exist."
+            )
+
         
         data = collection.get(
             include=["documents", "metadatas"]

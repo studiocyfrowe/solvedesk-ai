@@ -37,7 +37,7 @@ def load_records_from_file(path: Path, ext: str) -> list[dict]:
 
 
 def get_preprocessing_config(type: str) -> tuple[list[str], list[str]]:
-    if type == "know_base":
+    if type == "know-base":
         return (
             ["id", "name", "question", "answer"],
             ["name", "question", "answer"]
@@ -45,14 +45,14 @@ def get_preprocessing_config(type: str) -> tuple[list[str], list[str]]:
 
     if type == "faq":
         return (
-            ["question", "answer"],
+            ["id", "question", "answer"],
             ["question", "answer"]
         )
 
     if type == "helpdesk":
         return (
-            ["tytul", "opisproblemu", "rozwiazanie"],
-            ["tytul", "opisproblemu", "rozwiazanie"]
+            ["id", "title", "problem", "solution"],
+            ["title", "problem", "solution"]
         )
 
     raise typer.BadParameter(
@@ -75,7 +75,7 @@ def sync_api(
     )
 ):
     try:
-        typer.echo("\nStarting API synchronization...\n")
+        typer.echo("\n[STATUS] Starting API synchronization...\n")
 
         env_builder = get_env_builder()
         env_builder.update_env_variable(
@@ -83,7 +83,7 @@ def sync_api(
             os.getenv('ISSUES_URL')
         )
 
-        typer.echo("Saved ISSUES_URL to .env")
+        typer.echo("[STATUS] Saved ISSUES_URL to .env")
         typer.echo(f"API URL: {api_url}\n")
 
         service = get_cli_data_sync_service(
@@ -93,11 +93,14 @@ def sync_api(
 
         count = service.sync()
 
-        typer.echo("Synchronization completed successfully\n")
-        typer.echo(f"Imported documents: {count}")
+        typer.echo(f"[STATUS] Imported documents: {count}")
+        
+        typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        typer.echo("[SUCCESS] API Synchronization completed successfully!\n")
+        typer.echo("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
     except Exception as e:
-        typer.echo(f"\nERROR: {str(e)}\n")
+        typer.echo(f"\n[ERROR] {str(e)}\n")
         raise typer.Exit(code=1)
 
 
@@ -107,6 +110,9 @@ def sync_api(
 )
 def import_data(
     file_path: str,
+    collection_name : str = typer.Argument(
+        help="Choose existing collection in your database"
+    ),
     type: str = typer.Option(
         "know-base",
         "--type",
@@ -151,11 +157,12 @@ def import_data(
         clean_records = data_processor.execute()
 
         typer.echo("\nPREPROCESSING SUMMARY\n")
-        typer.echo(f"Raw records: {len(records)}")
-        typer.echo(f"Valid records: {len(clean_records)}")
-        typer.echo(f"Rejected records: {len(records) - len(clean_records)}")
+        typer.echo(f"[STATUS] Raw records: {len(records)}")
+        typer.echo(f"[STATUS] Valid records: {len(clean_records)}")
+        typer.echo(f"[STATUS] Rejected records: {len(records) - len(clean_records)}")
 
-        typer.echo("\nCLEAN FILE PREVIEW\n")
+        typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        typer.echo("CLEAN FILE PREVIEW\n")
 
         preview = clean_records[:3]
 
@@ -167,15 +174,15 @@ def import_data(
             )
         )
 
-        typer.echo("\n")
-        typer.echo(f"Selected data type: {type}")
+        typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+        typer.echo(f"[STATUS] Selected data type: {type}")
 
         confirmed = typer.confirm(
-            "Do you want to import this cleaned data?"
+            "[CONFIRM] Do you want to import this cleaned data?"
         )
 
         if not confirmed:
-            typer.echo("Import canceled")
+            typer.echo("[STATUS] Import canceled")
             raise typer.Exit()
 
         content = json.dumps(
@@ -183,7 +190,10 @@ def import_data(
             ensure_ascii=False
         ).encode("utf-8")
 
-        service = get_cli_data_sync_service(api_url="")
+        service = get_cli_data_sync_service(
+            api_url="",
+            collection_name=collection_name
+        )
 
         count = service.sync(
             type=type,
@@ -191,10 +201,14 @@ def import_data(
             extension=".json"
         )
 
-        typer.echo(f"Imported documents: {count}")
+        typer.echo(f"[STATUS] Imported documents: {count}")
+        
+        typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        typer.echo(f"[SUCCESS] Documents has been imported!")
+        typer.echo("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
     except Exception as e:
-        typer.echo(f"ERROR: {str(e)}")
+        typer.echo(f"[ERROR] {str(e)}")
         raise typer.Exit(code=1)
 
 
