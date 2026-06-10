@@ -77,7 +77,17 @@ venv\Scripts\activate
 (venv) pip install solvedesk-ai
 ```
 
-Initialize project:
+Configure local LLM:
+
+```bash
+solvedesk llm init
+```
+
+---
+
+## CLI Commands
+
+### Project Configuration
 
 ```bash
 (venv) C:\path\to\project> solvedesk conf init
@@ -120,88 +130,97 @@ solvedesk run:app
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
+Initialize project environment.
+
+### Database
+
 Initialize vector database:
 
 ```bash
 (venv) C:\path\to\project> solvedesk db init
 
-Downloading embedding model...
-Model downloaded: infrastructure\models\silver-retriever-base-v1
-Plik .env już istnieje — pominięto tworzenie
-Created databases directory: infrastructure\databases
-Created vector database: infrastructure\databases\default-db
-Created/downloaded collection: random-text
-SolveDesk vector DB initialized
-
-
-(venv) C:\path\to\project> solvedesk db new
-[STATUS] Created new collection: sd-collection-8780
-
-(venv) C:\path\to\project> solvedesk db new --collection-name test_col
-[STATUS] Created new collection: test_col
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[NEXT STEP] Show details: solvedesk db details <collection-name>
-[NEXT STEP] Show list: solvedesk db list
-
-
-(venv) C:\path\to\project> solvedesk db list
-
-test_col | id=235c239e-421b-4b09-95d2-8a81bbafffd3 | documents=0 | metadata={'hnsw:space': 'cosine'}
-sd-collection-8780 | id=d857b0a3-27cc-4a67-8463-4d4d075b00dd | documents=0 | metadata={'hnsw:space': 'cosine'}
-
-
-(venv) C:\path\to\project> solvedesk db init --chroma-dir test12345
-
-[CONFIRM] Download embedding model (ipipan/silver-retriever-v1)? [y/N]: n
-Plik .env już istnieje — pominięto tworzenie
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[STATUS] Downloading embedding model...
+[STATUS] Model downloaded: utils\models\silver-retriever-base-v1
+[STATUS] Plik .env already exists - downloading model has been skipped
 [STATUS] Created databases directory: utils\databases
-[STATUS] Created vector database: utils\databases\test12345
-[STATUS] Vector Database is ready!
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[NEXT STEP] Create new collection: solvedesk db new <collection-name>
-```
-
-Configure local LLM:
-
-```bash
-solvedesk llm init
-```
-
----
-
-## CLI Commands
-
-### Project Configuration
-
-```bash
-solvedesk conf init
-```
-
-Initialize project environment.
-
-### Database
-
-```bash
-solvedesk db init
+[STATUS] Created vector database: utils\databases\default-db
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[SUCCESS] SolveDesk vector DB initialized
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 Create vector database and download embedding model.
 
 ```bash
-solvedesk db list
+(venv) C:\path\to\project> solvedesk db init --chroma-dir test12345
+
+[CONFIRM] Download embedding model (ipipan/silver-retriever-v1)? [y/N]: n
+[STATUS] Plik .env already exists - downloading model has been skipped
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[STATUS] Created databases directory: utils\databases
+[STATUS] Created vector database: utils\databases\test12345
+[STATUS] Vector Database is ready!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[NEXT STEP] Create new collection: solvedesk db new <collection-name>
 ```
 
 Display available collections.
 
 ```bash
-solvedesk db details COLLECTION_NAME
+(venv) C:\path\to\project> solvedesk db list
+
+test_col | id=235c239e-421b-4b09-95d2-8a81bbafffd3 | documents=0 | metadata={'hnsw:space': 'cosine'}
+sd-collection-8780 | id=d857b0a3-27cc-4a67-8463-4d4d075b00dd | documents=0 | metadata={'hnsw:space': 'cosine'}
+```
+
+Create new collection by default
+
+```bash
+(venv) C:\path\to\project> solvedesk db new
+[STATUS] Created new collection: sd-collection-2132
+```
+
+or custom name
+
+```bash
+(venv) C:\path\to\project> solvedesk db new --collection-name test-collection
+[STATUS] Created new collection: test-collection
+```
+
+Delete single collection.
+
+```bash
+(venv) C:\path\to\project> solvedesk db delete test123
+[STATUS] Collection not found: test123
+
+(venv) C:\path\to\project> solvedesk db delete sd-collection-2132
+[STATUS] Collection deleted: sd-collection-2132
 ```
 
 Display collection details.
+```bash
+(venv) C:\path\to\project> solvedesk db details test-col123
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COLLECTION DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Name: test-col123
+ID: 4f9a8b8a-9ac9-48be-8f5a-9fe1e20d4551
+[STATUS] Documents (count): 0
+[STATUS] Metadata: {'hnsw:space': 'cosine'}
+
+[STATUS] No documents.
+```
+
+Switch database
+
+```bash
+(venv) C:\path\to\project> solvedesk db checkout test
+Switched to database: test
+CHROMA_DIR=utils\databases\test
+```
 
 ### Data Synchronization
 

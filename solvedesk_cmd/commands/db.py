@@ -180,7 +180,7 @@ def collection_details(
     typer.echo(f"Name: {details['name']}")
     typer.echo(f"ID: {details['id']}")
     typer.echo(
-        f"[STATUS] Documents (count): {details['documents_count']} {(620 // 512) + 1}"
+        f"[STATUS] Documents (count): {details['documents_count']}"
     )
     typer.echo(
         f"[STATUS] Metadata: {details['metadata']}"
