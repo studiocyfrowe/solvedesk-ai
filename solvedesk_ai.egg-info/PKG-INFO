@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: solvedesk-ai
-Version: 0.2.6
+Version: 0.2.8
 Summary: Local RAG framework for building intelligent knowledge bases
 Author: Dominik Hofman
 Requires-Python: >=3.10
@@ -166,6 +166,20 @@ SolveDesk vector DB initialized
 
 test_col | id=235c239e-421b-4b09-95d2-8a81bbafffd3 | documents=0 | metadata={'hnsw:space': 'cosine'}
 sd-collection-8780 | id=d857b0a3-27cc-4a67-8463-4d4d075b00dd | documents=0 | metadata={'hnsw:space': 'cosine'}
+
+
+(venv) C:\path\to\project> solvedesk db init --chroma-dir test12345
+
+[CONFIRM] Download embedding model (ipipan/silver-retriever-v1)? [y/N]: n
+Plik .env już istnieje — pominięto tworzenie
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[STATUS] Created databases directory: utils\databases
+[STATUS] Created vector database: utils\databases\test12345
+[STATUS] Vector Database is ready!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[NEXT STEP] Create new collection: solvedesk db new <collection-name>
 ```
 
 Configure local LLM:

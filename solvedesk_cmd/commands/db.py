@@ -17,8 +17,9 @@ def checkout_db(
         help="Vector database directory name"
     )
 ):
+    manager = get_collection_manager()
     env_builder = get_env_builder()
-    databases_path = Path("./infrastructure/databases")
+    databases_path = Path("./utils/databases")
     if not databases_path.exists():
         typer.echo("Directory ./databases does not exist")
         raise typer.Exit(code=1)
@@ -40,8 +41,10 @@ def checkout_db(
 
     env_builder.update_env_variable(
         "CHROMA_DIR",
-        f"./infrastructure/databases/{database_dir}"
+        f"./utils/databases/{database_dir}"
     )
+    
+    manager.refresh()
 
     typer.echo(f"Checked out database: {database_dir}")
     typer.echo(f"CHROMA_DIR={selected_database}")
@@ -71,8 +74,9 @@ def init_vector_db(
         help="Vector database directory name"
     )
 ):
+    manager = get_collection_manager()
     env_builder = get_env_builder()
-    databases_path = Path("./infrastructure/databases")
+    databases_path = Path("./utils/databases")
 
     databases_path.mkdir(
         parents=True,
@@ -83,7 +87,7 @@ def init_vector_db(
 
     env_builder.update_env_variable(
         "CHROMA_DIR",
-        f"./infrastructure/databases/{chroma_dir}"
+        f"./utils/databases/{chroma_dir}"
     )
 
     final_database_path.mkdir(
@@ -91,14 +95,24 @@ def init_vector_db(
         exist_ok=True
     )
 
-    model_downloader = ModelDownloader(
-        model_repo=model_repo,
-        models_dir=models_dir
-    )
+    model_local_path = None
 
-    _, model_local_path = model_downloader.combine_url()
+    if typer.confirm(
+        "\n[CONFIRM] Download embedding model (ipipan/silver-retriever-v1)?"
+    ):
+        model_downloader = ModelDownloader(
+            model_repo=model_repo,
+            models_dir=models_dir
+        )
 
-    model_downloader.execute()
+        _, model_local_path = model_downloader.combine_url()
+
+        model_downloader.execute()
+    else:
+        _, model_local_path = ModelDownloader(
+            model_repo=model_repo,
+            models_dir=models_dir
+        ).combine_url()
 
     env_config = env_builder.get_env_config(
         model_local_path=str(model_local_path),
@@ -107,6 +121,7 @@ def init_vector_db(
     )
 
     env_builder.execute()
+    manager.refresh()
 
     typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     typer.echo(f"[STATUS] Created databases directory: {databases_path}")

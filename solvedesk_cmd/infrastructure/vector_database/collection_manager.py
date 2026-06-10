@@ -1,13 +1,27 @@
 import random
 import chromadb
 import os
+from dotenv import load_dotenv
+
 
 class CollectionManager:
     def __init__(self):
-        self.chroma_dir = os.getenv("CHROMA_DIR")
-        self.client = chromadb.PersistentClient(
-            path=self.chroma_dir
+        self.client = self._create_client()
+
+    def _create_client(self):
+        load_dotenv(override=True)
+
+        chroma_dir = os.getenv("CHROMA_DIR")
+
+        if not chroma_dir:
+            raise ValueError("CHROMA_DIR is not configured in .env")
+
+        return chromadb.PersistentClient(
+            path=chroma_dir
         )
+
+    def refresh(self):
+        self.client = self._create_client()
 
     def get_collection(self, collection_name: str):
         collection = self.client.get_collection(
