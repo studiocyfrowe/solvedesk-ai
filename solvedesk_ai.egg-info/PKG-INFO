@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: solvedesk-ai
-Version: 0.3.0
+Version: 0.3.1
 Summary: Local RAG framework for building intelligent knowledge bases
 Author: Dominik Hofman
 Requires-Python: >=3.10
@@ -92,12 +92,6 @@ Install solvedesk:
 ```bash
 venv\Scripts\activate 
 (venv) pip install solvedesk-ai
-```
-
-Configure local LLM:
-
-```bash
-solvedesk llm init
 ```
 
 ---
@@ -322,7 +316,19 @@ CLEAN FILE PREVIEW
 ```
 
 ```bash
-solvedesk sync api
+(venv) C:\path\to\project> solvedesk sync api
+[INPUT] Input external API URL: http://127.0.0.1:8000/data
+[INPUT] Type collection name from your vector database: testapi2
+[INPUT] Input token for API: secret-token
+[INPUT] Specify data type [know-base]: helpdesk
+
+[STATUS] Starting API synchronization...
+
+[STATUS] Imported documents: 869
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[SUCCESS] API Synchronization completed successfully!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 
@@ -354,13 +360,13 @@ Clusters: reports\clusters_visualization.png
 Token limit: reports\token_limit_chart.png
 Cosine similarity: reports\cosine_similarity_progress.png
 ```
-
 Generate reports containing:
 
 * cosine similarity statistics
 * cluster distribution
 * token statistics
 * PCA visualization
+
 
 ### Chunking
 

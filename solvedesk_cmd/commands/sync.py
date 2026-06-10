@@ -64,29 +64,21 @@ def get_preprocessing_config(type: str) -> tuple[list[str], list[str]]:
     "api",
     help="Download data from external API and save to selected vector database collection"
 )
-def sync_api(
-    api_url: str = typer.Argument(
-        ...,
-        help="External API URL"
-    ),
-    collection_name: str = typer.Option(
-        ...,
-        "--collection-name",
-        "-c",
-        help="Choose existing collection in your database"
-    ),
-    token: str = typer.Option(
-        None,
-        "--token",
-        "-t",
-        help="Bearer token for external API"
-    ),
-    data_type: str = typer.Option(
-        "know-base",
-        "--type",
-        help="Data type: know-base, faq or helpdesk"
+def sync_api():
+    api_url: str = typer.prompt(
+        "[INPUT] Input external API URL"
     )
-):
+    collection_name: str = typer.prompt(
+        "[INPUT] Type collection name from your vector database"
+    )
+    token: str = typer.prompt(
+        "[INPUT] Input token for API"
+    )
+    data_type: str = typer.prompt(
+        "[INPUT] Specify data type",
+        default="know-base"
+    )
+    
     try:
         typer.echo("\n[STATUS] Starting API synchronization...\n")
 
@@ -115,18 +107,18 @@ def sync_api(
     "file",
     help="Load data from local file and save to selected vector database collection"
 )
-def import_data(
-    file_path: str,
-    collection_name : str = typer.Argument(
-        help="Choose existing collection in your database"
+def import_data():
+    file_path: str = typer.prompt(
+        "[INPUT] Input file path:"
     ),
-    type: str = typer.Option(
-        "know-base",
-        "--type",
-        "-t",
-        help="Data type: know_base, faq or helpdesk"
+    collection_name : str = typer.prompt(
+        "[INPUT] Type collection name from your vector database:"
+    ),
+    type: str = typer.prompt(
+        "[INPUT] Specify data type:",
+        default="know-base"
     )
-):
+    
     try:
         path = Path(file_path)
         if not path.exists():

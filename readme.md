@@ -77,12 +77,6 @@ venv\Scripts\activate
 (venv) pip install solvedesk-ai
 ```
 
-Configure local LLM:
-
-```bash
-solvedesk llm init
-```
-
 ---
 
 ## CLI Commands
@@ -305,7 +299,11 @@ CLEAN FILE PREVIEW
 ```
 
 ```bash
-(venv) C:\path\to\project> solvedesk sync api http://127.0.0.1:8000/data --collection-name apicol --token secret-token --type helpdesk
+(venv) C:\path\to\project> solvedesk sync api
+[INPUT] Input external API URL: http://127.0.0.1:8000/data
+[INPUT] Type collection name from your vector database: testapi2
+[INPUT] Input token for API: secret-token
+[INPUT] Specify data type [know-base]: helpdesk
 
 [STATUS] Starting API synchronization...
 
@@ -345,13 +343,13 @@ Clusters: reports\clusters_visualization.png
 Token limit: reports\token_limit_chart.png
 Cosine similarity: reports\cosine_similarity_progress.png
 ```
-
 Generate reports containing:
 
 * cosine similarity statistics
 * cluster distribution
 * token statistics
 * PCA visualization
+
 
 ### Chunking
 
