@@ -324,4 +324,5 @@ solvedesk run:app
 
 ## License
 
+Author: Dominik Hofman [https://www.linkedin.com/in/hofmandesign/]
 MIT License
