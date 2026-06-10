@@ -21,6 +21,9 @@ class DataSyncService:
         if content and extension:
             issues = self._load_from_file(content, extension)
         else:
+            if self.source is None:
+                raise RuntimeError("No source provided. Use content + extension or provide API source.")
+
             issues = self.source.fetch()
 
         processed = 0

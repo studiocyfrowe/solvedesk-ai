@@ -305,7 +305,15 @@ CLEAN FILE PREVIEW
 ```
 
 ```bash
-solvedesk sync api
+(venv) C:\path\to\project> solvedesk sync api http://127.0.0.1:8000/data --collection-name apicol --token secret-token --type helpdesk
+
+[STATUS] Starting API synchronization...
+
+[STATUS] Imported documents: 869
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[SUCCESS] API Synchronization completed successfully!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 

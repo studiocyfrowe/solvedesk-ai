@@ -15,7 +15,10 @@ class RecordFactory:
 
     @staticmethod
     def get_id(record: dict) -> str | None:
-        id_field = RecordFactory.find_field(record, ["id"])
+        id_field = RecordFactory.find_field(
+            record,
+            ["id", "unnamed: 0", "index"]
+        )
 
         if not id_field:
             return None
@@ -55,12 +58,12 @@ class RecordFactory:
     def to_helpdesk(record: dict) -> dict | None:
         title_field = RecordFactory.find_field(
             record,
-            ["issue_name", "title", "name", "temat", "problem"]
+            ["issue_name", "title", "name", "temat", "problem", "subject"]
         )
 
         symptoms_field = RecordFactory.find_field(
             record,
-            ["issue_symptoms", "symptoms", "sympthoms", "description", "opis"]
+            ["issue_symptoms", "symptoms", "sympthoms", "description", "opis", "body"]
         )
 
         solution_field = RecordFactory.find_field(

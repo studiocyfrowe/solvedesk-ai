@@ -69,34 +69,41 @@ def sync_api(
         ...,
         help="External API URL"
     ),
+    collection_name: str = typer.Option(
+        ...,
+        "--collection-name",
+        "-c",
+        help="Choose existing collection in your database"
+    ),
     token: str = typer.Option(
         None,
+        "--token",
+        "-t",
         help="Bearer token for external API"
+    ),
+    data_type: str = typer.Option(
+        "know-base",
+        "--type",
+        help="Data type: know-base, faq or helpdesk"
     )
 ):
     try:
         typer.echo("\n[STATUS] Starting API synchronization...\n")
 
-        env_builder = get_env_builder()
-        env_builder.update_env_variable(
-            "ISSUES_URL", 
-            os.getenv('ISSUES_URL')
-        )
-
-        typer.echo("[STATUS] Saved ISSUES_URL to .env")
-        typer.echo(f"API URL: {api_url}\n")
-
         service = get_cli_data_sync_service(
             api_url=api_url,
-            token=token
+            token=token,
+            collection_name=collection_name
         )
 
-        count = service.sync()
+        count = service.sync(
+            type=data_type
+        )
 
         typer.echo(f"[STATUS] Imported documents: {count}")
-        
+
         typer.echo("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        typer.echo("[SUCCESS] API Synchronization completed successfully!\n")
+        typer.echo("[SUCCESS] API Synchronization completed successfully!")
         typer.echo("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
     except Exception as e:

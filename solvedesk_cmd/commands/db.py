@@ -65,7 +65,7 @@ def init_vector_db(
     ),
 
     models_dir: str = typer.Option(
-        "./infrastructure/models",
+        "./utils/models",
         help="Directory for downloaded models"
     ),
 
