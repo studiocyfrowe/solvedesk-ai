@@ -350,6 +350,7 @@ Generate reports containing:
 * token statistics
 * PCA visualization
 
+![alt text](image.png)
 
 ### Chunking
 
