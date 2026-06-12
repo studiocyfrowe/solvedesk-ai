@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: solvedesk-ai
-Version: 0.3.1
+Version: 0.4.0
 Summary: Local RAG framework for building intelligent knowledge bases
 Author: Dominik Hofman
 Requires-Python: >=3.10
@@ -339,21 +339,34 @@ CLEAN FILE PREVIEW
 
 Embedding quality report
 
-Documents count: 5
+Documents count: 869
 Embedding size: 768
-Mean similarity: 0.8784
+Mean similarity: 0.9202
 
 Clusters:
-Cluster 2: 2 documents
-Cluster 0: 2 documents
-Cluster 1: 1 documents
+Cluster 1: 505 documents
+Cluster 0: 202 documents
+Cluster 2: 162 documents
 
 Token statistics:
-Document 1 | Tokens: 21/512 (4.1%) | Truncated: False | Embedding size: 768
-Document 2 | Tokens: 23/512 (4.49%) | Truncated: False | Embedding size: 768
-Document 3 | Tokens: 26/512 (5.08%) | Truncated: False | Embedding size: 768
-Document 4 | Tokens: 21/512 (4.1%) | Truncated: False | Embedding size: 768
-Document 5 | Tokens: 24/512 (4.69%) | Truncated: False | Embedding size: 768
+Document 1 | Tokens: 160/512 (31.25%) | Truncated: False | Embedding size: 768
+Document 2 | Tokens: 430/512 (83.98%) | Truncated: False | Embedding size: 768
+Document 3 | Tokens: 218/512 (42.58%) | Truncated: False | Embedding size: 768
+Document 4 | Tokens: 206/512 (40.23%) | Truncated: False | Embedding size: 768
+Document 5 | Tokens: 375/512 (73.24%) | Truncated: False | Embedding size: 768
+Document 6 | Tokens: 155/512 (30.27%) | Truncated: False | Embedding size: 768
+Document 7 | Tokens: 277/512 (54.1%) | Truncated: False | Embedding size: 768
+Document 8 | Tokens: 313/512 (61.13%) | Truncated: False | Embedding size: 768
+Document 9 | Tokens: 362/512 (70.7%) | Truncated: False | Embedding size: 768
+Document 10 | Tokens: 386/512 (75.39%) | Truncated: False | Embedding size: 768
+Document 11 | Tokens: 295/512 (57.62%) | Truncated: False | Embedding size: 768
+[...]
+Document 864 | Tokens: 270/512 (52.73%) | Truncated: False | Embedding size: 768
+Document 865 | Tokens: 153/512 (29.88%) | Truncated: False | Embedding size: 768
+Document 866 | Tokens: 372/512 (72.66%) | Truncated: False | Embedding size: 768
+Document 867 | Tokens: 369/512 (72.07%) | Truncated: False | Embedding size: 768
+Document 868 | Tokens: 403/512 (78.71%) | Truncated: False | Embedding size: 768
+Document 869 | Tokens: 98/512 (19.14%) | Truncated: False | Embedding size: 768
 
 Charts created:
 Clusters: reports\clusters_visualization.png
@@ -367,6 +380,9 @@ Generate reports containing:
 * token statistics
 * PCA visualization
 
+![alt text](image.png)
+![alt text](image-2.png)
+![alt text](image-1.png)
 
 ### Chunking
 
