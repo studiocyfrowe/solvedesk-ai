@@ -13,7 +13,7 @@ def run_app(
         help="Host address"
     ),
     port: int = typer.Option(
-        8000,
+        8080,
         help="Application port"
     ),
     reload: bool = typer.Option(

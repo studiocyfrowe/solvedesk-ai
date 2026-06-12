@@ -117,7 +117,7 @@ venv\Scripts\activate
 cd Test123
 solvedesk db init
 solvedesk llm init
-solvedesk run:app
+solvedesk main run
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [STATUS] Happy coding!
@@ -386,8 +386,19 @@ Configure Ollama host and model.
 ### Run Application
 
 ```bash
-solvedesk run:app
+(venv) C:\path\to\project> solvedesk main run
+
+Starting SolveDesk API...
+
+INFO:     Will watch for changes in these directories: ['C:\\path\\to\\project>']
+INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+INFO:     Started reloader process [11964] using WatchFiles
+INFO:     Started server process [13428]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
 ```
+
+![alt text](image-3.png)
 
 Start FastAPI server.
 
@@ -419,12 +430,13 @@ Start FastAPI server.
 ## Example Workflow
 
 ```bash
-solvedesk conf init
-solvedesk db init
-solvedesk sync file
-solvedesk data revision
+solvedesk conf init  # 1) Initialize solvedesk project
+solvedesk db init  # 2) Initialize your vector database
+solvedesk db new  # 3) Create data collection (based on chromadb)
+solvedesk sync file  # 4) Import data from external source - file (from local path) or api (by URL) and save to collection
+solvedesk data revision  # 5) Checkout your embedding - generate report
 solvedesk llm init
-solvedesk run:app
+solvedesk main run
 ```
 
 ---

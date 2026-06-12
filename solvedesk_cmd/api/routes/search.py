@@ -1,7 +1,8 @@
 from solvedesk_cmd.api.requests.search_request import SearchRequest
 from fastapi import APIRouter, Depends, HTTPException
 from solvedesk_cmd.api.responses.solution_response import SolutionResponse
-from solvedesk_cmd.api.dependencies import get_search_service, get_current_token
+from solvedesk_cmd.api.dependencies import get_current_token
+from solvedesk_cmd.application.dependencies import get_search_service
 
 router = APIRouter()
 

@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from solvedesk_cmd.api.dependencies import get_current_token, get_manage_data_service
+
+from solvedesk_cmd.api.dependencies import get_current_token
 from solvedesk_cmd.api.requests.issue_request import IssueRequest
+from solvedesk_cmd.application.dependencies import get_manage_data_service
 
 router = APIRouter()
     
