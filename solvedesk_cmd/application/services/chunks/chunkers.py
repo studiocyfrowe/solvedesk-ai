@@ -1,6 +1,17 @@
 import math
 import typer
 import numpy as np
+from rich.progress import (
+    Progress,
+    SpinnerColumn,
+    BarColumn,
+    TextColumn,
+    TimeElapsedColumn,
+    TimeRemainingColumn
+)
+from rich.console import Console
+
+console = Console()
 
 class Chunkers:
     def __init__(
@@ -18,39 +29,78 @@ class Chunkers:
         self.model = model
         self.target_collection = target_collection
         self.chunk_size = chunk_size
+        
+    def chunk_document(
+        self,
+        document: str,
+        chunk_size: int
+    ) -> list[str]:
+        tokens = self.model.tokenize([str(document)])
+        input_ids = tokens["input_ids"][0]
 
-    def execute(self):
+        chunks = []
+
+        for start in range(0, len(input_ids), chunk_size):
+            end = start + chunk_size
+            chunk_tokens = input_ids[start:end]
+
+            chunk_text = self.model.tokenizer.decode(
+                chunk_tokens,
+                skip_special_tokens=True
+            )
+
+            chunks.append(chunk_text)
+
+        return chunks
+
+    def execute(self) -> int:
         total_chunks = 0
 
-        for index, document in enumerate(self.documents):
-            source_id = self.ids[index]
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[bold blue]Chunking documents"),
+            BarColumn(),
+            TextColumn("{task.completed}/{task.total}"),
+            TimeElapsedColumn(),
+            TimeRemainingColumn(),
+            console=console
+        ) as progress:
 
-            if self._is_chunk(source_id):
-                self._print_skipped(source_id)
-                continue
-
-            metadata = self._get_metadata(index)
-            input_ids = self._tokenize(document)
-            token_count = len(input_ids)
-            chunks_count = self._calculate_chunks_count(token_count)
-
-            self._print_document_info(
-                source_id=source_id,
-                token_count=token_count,
-                chunks_count=chunks_count
+            task = progress.add_task(
+                "chunking",
+                total=len(self.documents)
             )
 
-            chunks = self._split_tokens(input_ids, chunks_count)
+            for index, document in enumerate(self.documents):
+                source_id = self.ids[index]
+                metadata = self.metadatas[index] if self.metadatas else {}
 
-            total_chunks += self._save_chunks(
-                source_id=source_id,
-                chunks=chunks,
-                metadata=metadata,
-                chunks_count=chunks_count,
-                token_count=token_count
-            )
+                chunks = self.chunk_document(
+                    document=document,
+                    chunk_size=self.chunk_size
+                )
 
-        typer.echo(f"\nCreated chunks: {total_chunks}")
+                for chunk_index, chunk in enumerate(chunks, start=1):
+                    chunk_id = f"{source_id}_chunk_{chunk_index}"
+
+                    embedding = self.model.encode(chunk).tolist()
+
+                    self.target_collection.add(
+                        ids=[chunk_id],
+                        documents=[chunk],
+                        embeddings=[embedding],
+                        metadatas=[{
+                            **metadata,
+                            "source_id": source_id,
+                            "chunk_index": chunk_index,
+                            "chunk_size": self.chunk_size
+                        }]
+                    )
+
+                    total_chunks += 1
+
+                progress.update(task, advance=1)
+
         return total_chunks
 
     def _is_chunk(self, source_id) -> bool:

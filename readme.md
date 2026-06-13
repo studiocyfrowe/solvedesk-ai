@@ -31,25 +31,7 @@ The framework can be used both as a production-ready knowledge base solution and
 
 ## Architecture
 
-```text
-Documents / API
-       │
-       ▼
-Embedding Model
-       │
-       ▼
-    ChromaDB
-       │
-       ▼
-Semantic Search
-       │
-       ▼
-      LLM
-    Ollama
-       │
-       ▼
- Generated Response
-```
+![alt text](image-4.png)
 
 ---
 
@@ -369,11 +351,38 @@ Generate reports containing:
 
 ### Chunking
 
+Split large documents into smaller chunks suitable for RAG systems.
+
 ```bash
-solvedesk data chunk
+(venv) C:\path\to\project> solvedesk data chunk testapi2
+
+[INFO] Source collection: testapi2
+[INFO] Target collection: testapi2_chunks
+[INFO] Chunk size: 512 tokens
+
+⠹ Chunking documents ----- ---------------------------------- 115/869 0:01:12 0:08:21
+
+[INFO] Source collection: testapi2
+[INFO] Target collection: testapi2_chunks
+[INFO] Chunk size: 512 tokens
+
+  Chunking documents ---------------------------------------- 869/869 0:08:26 0:00:00
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[SUCCESS] Chunking completed
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Documents processed : 869
+Chunks created      : 869
+Duration            : 506.55s
+Saved to            : testapi2_chunks
 ```
 
-Split large documents into smaller chunks suitable for RAG systems.
+Then, you can check if new chunks' collection exists by command 'solvedesk db list'.
+
+```bash
+(venv) C:\path\to\project>solvedesk db list
+testapi2_chunks | id=4549f442-0477-46c4-acbf-5d381c1437c2 | documents=869 | metadata={'hnsw:space': 'cosine'}
+```
 
 ### LLM Configuration
 
@@ -425,6 +434,16 @@ Start FastAPI server.
 }
 ```
 
+### Helpdesk
+
+```json
+{
+  "problem": "VPN Connection",
+  "sympthoms": "Cannot connect to VPN",
+  "solution": "Verify credentials and VPN client configuration."
+}
+```
+
 ---
 
 ## Example Workflow
@@ -435,8 +454,8 @@ solvedesk db init  # 2) Initialize your vector database
 solvedesk db new  # 3) Create data collection (based on chromadb)
 solvedesk sync file  # 4) Import data from external source - file (from local path) or api (by URL) and save to collection
 solvedesk data revision  # 5) Checkout your embedding - generate report
-solvedesk llm init
-solvedesk main run
+solvedesk llm init # 6) Check connection with your Ollama Client
+solvedesk main run # 7) Run Swagger UI docs
 ```
 
 ---

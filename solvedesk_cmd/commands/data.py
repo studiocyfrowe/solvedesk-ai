@@ -1,4 +1,4 @@
-import typer
+import typer, time
 from dotenv import load_dotenv
 from solvedesk_cmd.application.dependencies import get_data_reporter, get_chart_builder, get_chunker
 from solvedesk_cmd.infrastructure.dependencies import get_collection, get_model, get_collection_manager
@@ -9,7 +9,7 @@ app = typer.Typer(name="data")
 
 @app.command(
     "chunk",
-    help="Chunk documents and save them only to a new collection"
+    help="Chunk documents and save them to a new collection"
 )
 def chunking(
     collection_name: str = typer.Argument(
@@ -31,39 +31,60 @@ def chunking(
     try:
         if collection_name.endswith("_chunks"):
             raise ValueError(
-                "Ta kolekcja wygląda już na podzieloną na chunki. "
-                "Podaj kolekcję źródłową, np. faq zamiast faq_chunks."
+                "Collection appears to already contain chunks. "
+                "Use the source collection instead."
             )
 
         if chunk_size <= 0:
-            raise ValueError("Chunk size musi być większy od 0.")
+            raise ValueError(
+                "Chunk size must be greater than 0."
+            )
 
         if target_collection_name is None:
-            target_collection_name = f"{collection_name}_chunks"
+            target_collection_name = (
+                f"{collection_name}_chunks"
+            )
 
         if collection_name == target_collection_name:
             raise ValueError(
-                "Kolekcja źródłowa i docelowa nie mogą być takie same."
+                "Source and target collections cannot be the same."
             )
 
-        model = get_model()
         col_mg = get_collection_manager()
 
-        source_ids, source_documents, source_metadatas, _ = col_mg.get_collection(
-            collection_name=collection_name
+        source_ids, source_documents, source_metadatas, _ = (
+            col_mg.get_collection(
+                collection_name=collection_name
+            )
         )
 
         if not source_documents:
-            typer.echo("Brak dokumentów do podziału.")
+            typer.echo(
+                "\n[WARNING] No documents found."
+            )
             return
+
+        typer.echo(
+            f"\n[INFO] Source collection: {collection_name}"
+        )
+        typer.echo(
+            f"[INFO] Target collection: {target_collection_name}"
+        )
+        typer.echo(
+            f"[INFO] Chunk size: {chunk_size} tokens\n"
+        )
 
         col_mg.create(
             collection_name=target_collection_name
         )
 
-        _, _, _, target_collection = col_mg.get_collection(
-            collection_name=target_collection_name
+        _, _, _, target_collection = (
+            col_mg.get_collection(
+                collection_name=target_collection_name
+            )
         )
+
+        model = get_model()
 
         chunker = get_chunker(
             ids=source_ids,
@@ -74,16 +95,44 @@ def chunking(
             chunk_size=chunk_size
         )
 
+        start_time = time.perf_counter()
+
         total_chunks = chunker.execute()
 
-        typer.echo("\nChunking completed")
-        typer.echo(f"Source collection: {collection_name}")
-        typer.echo(f"Target collection: {target_collection_name}")
-        typer.echo(f"Chunk size: {chunk_size}")
-        typer.echo(f"Created chunks: {total_chunks}")
+        duration = time.perf_counter() - start_time
+
+        typer.echo(
+            "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        )
+        typer.echo(
+            "[SUCCESS] Chunking completed"
+        )
+        typer.echo(
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        )
+        typer.echo(
+            f"Documents processed : {len(source_documents)}"
+        )
+        typer.echo(
+            f"Chunks created      : {total_chunks}"
+        )
+        typer.echo(
+            f"Duration            : {duration:.2f}s"
+        )
+        typer.echo(
+            f"Saved to            : {target_collection_name}"
+        )
 
     except Exception as e:
-        typer.echo(f"\nERROR: {str(e)}\n")
+        typer.echo(
+            "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        )
+        typer.echo(
+            f"[ERROR] {str(e)}"
+        )
+        typer.echo(
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+        )
         raise typer.Exit(code=1)
 
 @app.command(
