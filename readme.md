@@ -471,6 +471,26 @@ solvedesk main run # 7) Run Swagger UI docs
 
 ---
 
+## Support the Project
+
+Hi! My name is Dominik Hofman, and I develop open-source AI tools in my spare time.
+
+If SolveDesk AI helps you, consider supporting the project. Every contribution helps me dedicate more time to developing new features, improving documentation, and maintaining the framework.
+
+### Buy Me a Coffee
+
+**Support SolveDesk AI:** [https://buycoffee.to/studiocyfrowe]
+
+Thank you for supporting open-source development! 🚀
+
+---
+
+**Dominik Hofman**
+Creator of SolveDesk AI
+
+
+---
+
 ## License
 
 Author: Dominik Hofman [https://www.linkedin.com/in/hofmandesign/]
