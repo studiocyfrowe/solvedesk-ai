@@ -481,13 +481,10 @@ If SolveDesk AI helps you, consider supporting the project. Every contribution h
 
 **Support SolveDesk AI:** [https://buycoffee.to/studiocyfrowe]
 
-Thank you for supporting open-source development! 🚀
-
----
+Thank you for supporting open-source development!
 
 **Dominik Hofman**
 Creator of SolveDesk AI
-
 
 ---
 
